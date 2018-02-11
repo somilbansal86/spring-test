@@ -2,20 +2,29 @@ package com.sumo.projects.springboottest.data;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import reactor.core.publisher.Flux;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Component
 public class LoadDB {
 
     @Bean
-    CommandLineRunner init(ChapterRepo chapterRepo){
+    CommandLineRunner init(MongoOperations operations) {
         return args -> {
-            Flux.just(new Chapter("Quick repo test"),
-            new Chapter("Reactive mongo Test"),
-            new Chapter("lorem ipsum"))
-                    .flatMap(chapterRepo::save)
-                    .subscribe(System.out::println);
+            // tag::log[]
+            operations.dropCollection(Image.class);
+
+            operations.insert(new Image("1",
+                    "learning-spring-boot-cover.jpg"));
+            operations.insert(new Image("2",
+                    "learning-spring-boot-2nd-edition-cover.jpg"));
+            operations.insert(new Image("3",
+                    "bazinga.png"));
+
+            operations.findAll(Image.class).forEach(image -> {
+                System.out.println(image.toString());
+            });
+            // end::log[]
         };
     }
 }

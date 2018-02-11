@@ -2,14 +2,16 @@ package com.sumo.projects.springboottest.data;
 
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@NoArgsConstructor
+@Document
 public class Image {
 
-    private String id;
-    private String name;
+    @Id
+    private final String id;
+    private final String name;
 
     public Image(String id, String name) {
         this.id = id;
